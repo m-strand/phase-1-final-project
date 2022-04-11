@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica:ital@1&family=IM+Fell+Great+Primer:ital@1&family=Raleway&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 class="logo">SongFinder</h1>
+        <p id="instructions">To Search, type the Artist's Name and then select either their Albums or Top Tracks. </p>
+      </header>
+      
+        <form id="enter-artist">
+              <input type="text" id="query" value="" placeholder="Type an Artist Name"/>
+              <input type="submit" id="search-albums" class="btn btn-primary" value="Albums" />
+              <input type="submit" id="search-top-tracks" class="btn btn-primary" value="Top Tracks" />
+         </form>
+      
+          <div id="results"></div>      
+<script src="index.js"></script>
+</body>
+</html>

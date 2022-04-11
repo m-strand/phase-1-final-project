@@ -1,0 +1,58 @@
+/*
+purple: A267AC
+dark grey: 393E46
+light grey: E5E5E5
+white 
+font-family: 'Raleway', sans-serif;
+*/
+*, html {
+    margin:0;
+    padding:0;  
+}
+header {
+    background-color: black;
+    width: 100%;
+    padding: 10px;
+    height: 50px; 
+    
+   
+}
+h1 {
+    color: white;
+    font-family: 'Plaster', cursive;
+    
+}
+
+body {
+background-color: #E5E5E5;
+font-family: 'Raleway', sans-serif;
+}
+
+
+#instructions {
+  float: right;
+  margin: 0 20px 0 0;
+  color: white;
+}
+.btn {
+  width: 200px;
+  height: 43px; 
+  background-color: black;
+  color: white;
+  float: left;
+  font-family: 'Plaster', cursive;
+}
+#query{
+    color: white;
+    width: 50%;
+    height: 40px;
+    float: left;
+}
+
+.activated-like {
+    
+}
+
+.green-detail {
+  color: #77D970;
+}

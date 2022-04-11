@@ -1,0 +1,36 @@
+Spotify Artist Diary
+
+Description
+This SPA allows you to search for an artist, select if you want to generate that artist's albums or top tracks, and then returns the selected list using the Spotify Developer API. Once that list is generated, the user can save any album or track that they would like to listen to later using the 'save' button. 
+
+
+API Reference
+The API used in this repo is Spotify for Develpers, please see the following link for more information: https://developer.spotify.com/documentation/web-api. 
+
+Features
+    -Search bar to type in an artist's name
+    -Button that will engage Spotify's API to provide a full list of a specified artist's albums
+    -Button that will engage Spotify's API to provide a list of a specified artist's top tracks
+    -Save button which will catalog tracks or albums selected by the user
+
+Tech/Framework Used
+-HTML5/CSS3
+-javascript ES12 2021
+-node.js v16.13.1
+
+Support
+For questions, you can reach out to the following: 
+Email - marie.strand00@gmail.com
+Discord - marie_00
+
+Roadmap
+Future features I would like to integrate into this project: 
+    -Add links to the albums or tracks in the Spotify app.
+    -Allow users to organize saved tracks or albums into lists that can be viewed via a side menu. 
+
+
+Authors and acknowledgment
+I would like to thank the Flatiron School for assisting me with this project and for providing my instruction on softwaring development. 
+
+License
+Flatiron School © Brooke Strand
