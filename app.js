@@ -1,83 +1,68 @@
-
-document.getElementById("search-albums").addEventListener('mouseover', function(){
-    document.querySelector("search-albums").classList.add("green-detail")
+document.getElementById("search-volumes").addEventListener('mouseover', function(){
+    document.querySelector("#search-volumes").classList.add("green-detail")
 });
-document.getElementById("search-albums").addEventListener('mouseleave', function(){
-    document.querySelector("search-albums").classList.remove("green-detail")
-  });
-
-document.getElementById("search-top-tracks").addEventListener('mouseover', function(){
-    document.querySelector("search-top-tracks").classList.add("green-detail")
-});
-  document.getElementById("search-top-tracks").addEventListener('mouseleave', function(){
-    document.querySelector("search-top-tracks").classList.remove("green-detail")
+document.getElementById("search-volumes").addEventListener('mouseleave', function(){
+    document.querySelector("#search-volumes").classList.remove("green-detail")
   });
 
   document.querySelector(".logo").addEventListener('mouseover', function(){
     document.querySelector(".logo").classList.add("green-detail")
   });
-  document.querySelectorAll(".logo").addEventListener('mouseleave', function(){
+  document.querySelector(".logo").addEventListener('mouseleave', function(){
     document.querySelector(".logo").classList.remove("green-detail")
 });
 
-function searchBarAlbum(query) {
-    fetch("https://api.spotify.com/v1/search", {
-        q: query,
-        type: album,
-    })
-    .then(resp => resp.json())
-    .then(data => data.forEach(album => entryA(album)))
+document.getElementById("enter-book").addEventListener("submit", function (e) {
+    e.preventDefault();
+    searchBarVolumes();
+});
+
+function searchBarVolumes(bookObj) {
+    const api_key = API_KEY;
+    let query = document.getElementById('query').value;
+    if(!query) {
+        let noResults = document.createElement("div")
+        noResults.className = 'noResults'
+        noResults.innerHTML =  "No Results Found"
+        document.querySelector(".results").appendChild(noResults);
+    }
+    else {
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${api_key}`, {
+            headers: {
+             Accept: 'application/json',
+            }
+        }) 
+    .then(response => response.json())
+    .then(data => data.items.forEach(function(item) {buildABook(item)}));
+}
 };
 
-function searchBarTracks(query) {
-    fetch("https://api.spotify.com/v1/search", {
-        q: query,
-        type: tracks,
-    })
-    .then(resp => resp.json())
-    .then(data => data.forEach(track => entryT(track)))
-};
-
-function searchAlbums () {document.getElementById("search-albums").addEventListener("submit", function (e) {
-    //prevent default here
-    searchBarAlbum(document.getElementById('query'.value))}, false)
-};
-function searchTracks () {document.getElementById("search-top-tracks").addEventListener("submit", function (e) {
-    //prevent default here
-    searchBarTracks(document.getElementById('query'.value))}, false)
-};
-
-//NEED to fix object paths for these 2 methods 
-function buildAnAlbum(artistAlbum) {
-    let entryA = document.createElement("div")
-    entryA.className = 'entryA'
-    entryA.innerHTML = ` \
-    ${album.items}
-
-    <button class="like-btn" id="${artistAlbum.id}">Like </button> \
+function buildABook(volume) {
+    let entryB = document.createElement("div")
+    entryB.className = 'entryB'
+    entryB.innerHTML =  `
+    <h4>Title: ${volume["volumeInfo"]["title"]}</h4> 
+    <p>Author: ${volume["volumeInfo"]["authors"]}</p>
+    <p>Publisher: ${volume["volumeInfo"]["publisher"]}</p>
+    <p>Date Published: ${volume["volumeInfo"]["publishedDate"]}</p>
+    <p id='description'>${volume["volumeInfo"]["description"]}</p>
+    <button class="like-btn" id="${volume["id"]}">Like</button>
     `
-    entryA.querySelector(".like-btn").addEventListener("click", function() {
-        document.getElementsByClassName("like-btn").classList.add("activated-like")
+    document.querySelector(".results").appendChild(entryB);
+    document.getElementById(`${volume["id"]}`).addEventListener("click", function() {
+        document.getElementById(`${volume["id"]}`).classList.toggle("activated-like")
+        if (document.getElementById(`${volume["id"]}`).classList.contains("activated-like"))
+        document.getElementById(`${volume["id"]}`).innerHTML = "Liked";
+        else {
+            document.getElementById(`${volume["id"]}`).innerHTML = "Like"; 
+        }
     })
-
-};
-
-{{#each albums.items}}
-<div style="background-image:url({{images.0.url}})" data-album-id="{{id}}" class="cover"></div>
-{{/each}}
-
-
-function buildATrack(artistTrack) {
-    let entryT = document.createElement("div")
-    entryT.className = 'entryT'
-    entryT.innerHTML = `\
-    ${tracks.items}
-    <img style="background-image:url(${})>
-    <button class="like-btn" id="${.id}">Like </button> \
-    `
-    //this is going to active all like buttons!!
-    entryT.querySelector(".like-btn").addEventListener("click", function() {
-        document.getElementsByClassName("like-btn").classList.add("activated-like")
-    })
-
-};
+    document.getElementById(`${volume["id"]}`).addEventListener('mouseover', function(){
+        document.getElementById(`${volume["id"]}`).classList.add("green-detail")
+      });
+    
+    document.getElementById(`${volume["id"]}`).addEventListener('mouseleave', function(){
+        document.getElementById(`${volume["id"]}`).classList.remove("green-detail")
+    }); 
+    
+}
