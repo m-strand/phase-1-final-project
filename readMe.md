@@ -6,6 +6,7 @@ This SPA allows you to search for volume title and then returns any books that m
 
 API Reference
 The API used in this repo is the Google Books API, please see the following link for more information: https://developers.google.com/books.
+The use of this API will require an API key, which you will need to obtain from the Googlebooks API site in order to utilize this repository. 
 
 Features
     -Search bar to type in volume title 
@@ -16,7 +17,6 @@ Tech/Framework Used
 -HTML5/CSS3
 -javascript ES12 2021
 -node.js v16.13.1
--dotenv (https://github.com/motdotla/dotenv)
 
 Support
 For questions, you can reach out to the following: 
@@ -30,7 +30,7 @@ Future features I would like to integrate into this project:
 
 
 Authors and acknowledgment
-I would like to thank the Flatiron School for assisting me with this project and for providing my instruction on softwaring development. 
+I would like to thank the Flatiron School for assisting me with this project and for providing my instruction on software development. 
 
 License
-Flatiron School © Brooke Strand
+MIT © Brooke Strand
