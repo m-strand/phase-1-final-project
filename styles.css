@@ -56,14 +56,15 @@ font-family: 'Plaster', cursive;
 .like-btn {
 width: 50px;
 height: 30px; 
-background-color: black;
-color: white;
+background-color: white;
+color: black;
+border: 3px solid black;
 float: left;
 font-family: 'Plaster', cursive;
 }
 
 .activated-like {
-  background-color: #77D970;
+  background-color: black;
   border: none;
   padding: 2px;
   color: #E5E5E5;

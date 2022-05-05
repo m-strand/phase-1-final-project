@@ -20,6 +20,8 @@ document.getElementById("enter-book").addEventListener("submit", function (e) {
 function searchBarVolumes(bookObj) {
     const api_key = 'AIzaSyAoZtsGR24X-AFD4yQsP16EwN-yfdG-oTI';
     let query = document.getElementById('query').value;
+    const results = document.querySelector(".results");
+    results.innerHTML = ""
     if(!query) {
         let noResults = document.createElement("div")
         noResults.className = 'noResults'
