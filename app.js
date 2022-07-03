@@ -31,6 +31,7 @@ document.querySelector("#wishlist").addEventListener('click', () => {
     const popup = document.getElementById("wishlist-pop-up");
       if (popup.style.visibility === "hidden") {
           popup.style.visibility = "visible";
+          wishListItems(); //infinite loop of adding Wishlist items!!!
       } 
       else {
           popup.style.visibility = "hidden";
@@ -55,19 +56,36 @@ document.querySelector("#sortBtn").addEventListener('click', () => {
 const addBtn = document.querySelectorAll('.addBtn');
 addBtn.forEach((add) => {
     add.addEventListener('click', () => {
-        if (add.innerHTML == 'add_circle_outline') {
+        let jsonObj = {}
+        let title = document.querySelector(`#title-${volume["id"]}`);
+        let author = document.querySelector(`#aut-${volume["id"]}`);
+        jsonObj = {
+          'title': title,
+          'author': author
+        }
+      if (add.innerHTML == 'add_circle_outline') {
           add.innerHTML = 'done';
+          fetch("https://localhost:3000", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            }, 
+              body: JSON.stringify(jsonObj)
+            })
+            .then(res => {console.log("Request complete! response:", res);});
         }
         else {
           add.innerHTML = 'add_circle_outline';
+          fetch('https://reqres.in/api/users/2', { //fix method to specify the element
+            method: "DELETE",
+            headers: {
+                'Content-type': 'application/json'}
+            });
         }
-  });
+    });
 });
 
 
-
-
-//OLD CODE I NEED TO REVIEW
 
 document.getElementById("enter-book").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -82,7 +100,7 @@ function searchBarVolumes() {
     if(!query) {
         let noResults = document.createElement("div")
         noResults.className = 'noResults'
-        noResults.innerHTML =  "No Results Found"
+        noResults.innerHTML =  "Try typing some letters and let the fun begin"
         document.querySelector(".search-section").appendChild(noResults);
     }
     else {
@@ -90,11 +108,21 @@ function searchBarVolumes() {
             headers: {
              Accept: 'application/json',
             }
-        }) 
+        })
     .then(response => response.json())
-    .then(data => data.items.forEach(function(item) {buildABook(item)}));
-}
+    .then(data => data.items.forEach(function(item) {buildABook(item)}))
+  }
 };
+
+function wishListItems() {
+  fetch('https://localhost3000', {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => data.items.forEach((item) => buildWishlistItem(item)));
+}
 
 function buildABook(volume) {
     let book = document.createElement('div');
@@ -116,30 +144,76 @@ function buildABook(volume) {
     addButton.appendChild(addIcon.createTextNode("add_circle_outline"));
 
     let title = book.createElement('h3');
+    title.id(`title-${volume["id"]}`);
     book.appendChild(title.createTextNode(`${volume["volumeInfo"]["title"]}`));
 
     let author = book.createElement('p');
-    //add span!!!
-    book.appendChild(author.createTextNode(`${volume["volumeInfo"]["authors"]}`));
+    let authorSpan = author.createElement('span');
+    authorSpan.classList.add('info');
+    authorSpan.createTextNode('Author');
+    let authorIdSpan = author.createElement('span');
+    authorIdSpan.id(`aut-${volume["id"]}`);
+    authorIdSpan.createTextNode(`${volume["volumeInfo"]["authors"]}`);
+    author.append(authorSpan);
+    author.append(authorIdSpan);
+    book.appendChild(author);
 
     let publisher = book.createElement('p');
-    //add span!!!
-    book.appendChild(publisher.createTextNode(`${volume["volumeInfo"]["publisher"]}`));
+    let publisherSpan = publisher.createElement('span');
+    publisherSpan.classList.add('info');
+    publisherSpan.createTextNode('Publisher');
+    let publisherIdSpan = publisher.createElement('span');
+    publisherIdSpan.id(`pub-${volume["id"]}`);
+    publisherIdSpan.createTextNode(`${volume["volumeInfo"]["publisher"]}`);
+    publisher.appendChild(publisherSpan);
+    publisher.appendChild(publisherIdSpan);
+    book.appendChild(publisher);
+
+    let datePublished = book.createElement('p');
+    let datePublishedSpan = datePublished.createElement('span');
+    datePublishedSpan.classList.add('info');
+    datePublishedSpan.createTextNode('Date Published');
+    let datePublishedIdSpan = datePublished.createElement('span');
+    datePublishedIdSpan.id(`dat-${volume["id"]}`);
+    datePublishedIdSpan.createTextNode(`${volume["volumeInfo"]["publisher"]}`);
+    datePublished.appendChild(datePublishedSpan);
+    datePublished.appendChild(datePublishedIdSpan);
+    book.appendChild(datePublished);
 
     let description = book.createElement('p');
     description.classList.add('description');
     book.appendChild(description.createTextNode(`${volume["volumeInfo"]["description"]}`));
 
-    entryB.innerHTML =  `
-    <div class='book'>
-      <button class="add" id="${id}">
-        <i class="material-icons addBtn">add_circle_outline</i>
-      </button>
-      <h3>The Poppy War</h3> 
-      <p><span class="info">Author</span> R. F. Kuang</p>
-      <p><span class="info">Publisher</span> Harper Voyager</p>
-      <p><span class="info">Date Published</span> May 1, 2018</p>
-      <p class='description'>The Poppy War is the story of passionate yet ruthless Fang Runin, also known as Rin, who grows up poor, orphaned by a previous war. But she studies and gets into an elite military academy, and develops a gift for shamanism that lets her call upon the fire powers of a vengeful Phoenix god</p>
-    </div>
-    `
 }
+
+
+function buildWishlistItem(item) {
+  let itemDiv = document.querySelector('#wishlist-pop-up');
+  let savedBook = document.createElement('div');
+  savedBook.classList.add('saved-book');
+  let bookInfo = document.createElement('div');
+  bookInfo.classList.add('book-info');
+  let titleBook = document.createElement('h3');
+  titleBook.createTextNode(item.title); //need to add a reference variable
+  let authorBook = document.createElement('p');
+  authorBook.createTextNode(item.author); //need to add a reference variable
+  let removeSaved = document.createElement('button');
+  removeSaved.classList.add('remove-saved');
+  let exitIcon = document.createElement('i');
+  exitIcon.classList.add('material-icons');
+  exitIcon.createTextNode('&#xe14c;');
+
+  bookInfo.append(titleBook);
+  bookInfo.append(authorBook);
+  savedBook.append(bookInfo);
+  savedBook.appendChild(removeSaved);
+  savedBook.appendChild(exitIcon);
+  itemDiv.append(savedBook);
+}
+
+  
+
+      
+
+
+
