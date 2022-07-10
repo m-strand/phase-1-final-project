@@ -31,7 +31,6 @@ document.querySelector("#wishlist").addEventListener('click', () => {
     const popup = document.getElementById("wishlist-pop-up");
       if (popup.style.visibility === "hidden") {
           popup.style.visibility = "visible";
-          wishListItems(); //infinite loop of adding Wishlist items!!!
       } 
       else {
           popup.style.visibility = "hidden";
@@ -43,146 +42,129 @@ document.querySelector("#exit-list").addEventListener('click', () => {
       popup.style.visibility = "hidden";
 });
 
-document.querySelector("#sortBtn").addEventListener('click', () => {
-    const popup = document.getElementById("sortby");
-      if (popup.style.visibility === "hidden") {
-          popup.style.visibility = "visible";
-      } 
-      else {
-          popup.style.visibility = "hidden";
-      }
+document.getElementById("enter-book").addEventListener("submit", function (e) {
+  e.preventDefault();
+  searchBarVolumes();
 });
 
-const addBtn = document.querySelectorAll('.addBtn');
-addBtn.forEach((add) => {
-    add.addEventListener('click', () => {
-        let jsonObj = {}
-        let title = document.querySelector(`#title-${volume["id"]}`);
-        let author = document.querySelector(`#aut-${volume["id"]}`);
-        jsonObj = {
-          'title': title,
-          'author': author
-        }
+function searchBarVolumes() {
+  const api_key =  '';
+  let query = document.getElementById('query').value;
+  const results = document.querySelector(".search-section");
+  results.innerHTML = ""
+  if(!query) {
+      let noResults = document.createElement("div")
+      noResults.className = 'noResults'
+      noResults.innerHTML =  "Try typing some letters and let the fun begin"
+      document.querySelector(".search-section").appendChild(noResults);
+  }
+  else {
+      fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${api_key}`, {
+          headers: {
+           Accept: 'application/json',
+          }
+      })
+  .then(response => response.json())
+  .then(data => data.items.forEach(function(item) {buildABook(item)}))
+}
+};
+
+function buildABook(volume) {
+  let searchResults = document.querySelector('.search-section');
+  let book = document.createElement('div');
+  book.classList.add('book');
+  book.id = `wish-${volume["id"]}`;
+  searchResults.appendChild(book);
+
+  let addButton = document.createElement('button');
+  addButton.classList.add('add');
+  addButton.id = `${volume["id"]}`;
+  book.appendChild(addButton);
+
+  let addIcon = document.createElement('i');
+  addIcon.classList.add('material-icons');
+  addIcon.classList.add('addBtn');
+  addIcon.appendChild(document.createTextNode("add_circle_outline"));
+  addButton.appendChild(addIcon);
+
+  let title = document.createElement('h3');
+  title.id =`title-${volume["id"]}`;
+  title.appendChild(document.createTextNode(`${volume["volumeInfo"]["title"]}`));
+  book.appendChild(title);
+
+  let author = document.createElement('p');
+  let authorSpan = document.createElement('span');
+  authorSpan.classList.add('info');
+  authorSpan.appendChild(document.createTextNode('Author '));
+  let authorIdSpan = document.createElement('span');
+  authorIdSpan.id = `aut-${volume["id"]}`;
+  authorIdSpan.appendChild(document.createTextNode(`${volume["volumeInfo"]["authors"]}`));
+  author.append(authorSpan);
+  author.append(authorIdSpan);
+  book.appendChild(author);
+
+  let publisher = document.createElement('p');
+  let publisherSpan = document.createElement('span');
+  publisherSpan.classList.add('info');
+  publisherSpan.appendChild(document.createTextNode('Publisher '));
+  let publisherIdSpan = document.createElement('span');
+  publisherIdSpan.id = `pub-${volume["id"]}`;
+  publisherIdSpan.appendChild(document.createTextNode(`${volume["volumeInfo"]["publisher"]}`));
+  publisher.appendChild(publisherSpan);
+  publisher.appendChild(publisherIdSpan);
+  book.appendChild(publisher);
+
+  let datePublished = document.createElement('p');
+  let datePublishedSpan = document.createElement('span');
+  datePublishedSpan.classList.add('info');
+  datePublishedSpan.appendChild(document.createTextNode('Date Published '));
+  let datePublishedIdSpan = document.createElement('span');
+  datePublishedIdSpan.id = `dat-${volume["id"]}`;
+  datePublishedIdSpan.appendChild(document.createTextNode(`${volume["volumeInfo"]["publisher"]}`));
+  datePublished.appendChild(datePublishedSpan);
+  datePublished.appendChild(datePublishedIdSpan);
+  book.appendChild(datePublished);
+
+  let description = document.createElement('p');
+  description.classList.add('description');
+  book.appendChild(description.appendChild(document.createTextNode(`${volume["volumeInfo"]["description"]}`)));
+
+  
+  const addBtn = document.querySelectorAll('.addBtn');
+  addBtn.forEach((add) => {
+      add.addEventListener('click', () => {
+          let jsonObj = {}
+          let title = document.querySelector(`#title-${volume["id"]}`);
+          let author = document.querySelector(`#aut-${volume["id"]}`);
+          let wishId = document.querySelector(`#wish-${volume["id"]}`);
+          jsonObj = {
+            'title': title.innerHTML,
+            'author': author.innerHTML,
+            'wishId': wishId.id
+          }
       if (add.innerHTML == 'add_circle_outline') {
           add.innerHTML = 'done';
-          fetch("https://localhost:3000", {
+          buildWishlistItem(jsonObj);
+          /*fetch("https://localhost:3000", {
             method: "POST",
             headers: {
               'Content-Type': 'application/json'
             }, 
               body: JSON.stringify(jsonObj)
             })
-            .then(res => {console.log("Request complete! response:", res);});
+            .then(res => {console.log("Request complete! response:", res);}); */
         }
-        else {
+      else {
           add.innerHTML = 'add_circle_outline';
-          fetch('https://reqres.in/api/users/2', { //fix method to specify the element
+          /*fetch("https://localhost:3000/" + jsonObj, { 
             method: "DELETE",
             headers: {
-                'Content-type': 'application/json'}
-            });
-        }
-    });
+              'Content-type': 'application/json'}
+          }); */
+          removeWishListItem(jsonObj);
+      }
+  });
 });
-
-
-
-document.getElementById("enter-book").addEventListener("submit", function (e) {
-    e.preventDefault();
-    searchBarVolumes();
-});
-
-function searchBarVolumes() {
-    const api_key =  '';
-    let query = document.getElementById('query').value;
-    const results = document.querySelector(".results");
-    results.innerHTML = ""
-    if(!query) {
-        let noResults = document.createElement("div")
-        noResults.className = 'noResults'
-        noResults.innerHTML =  "Try typing some letters and let the fun begin"
-        document.querySelector(".search-section").appendChild(noResults);
-    }
-    else {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${api_key}`, {
-            headers: {
-             Accept: 'application/json',
-            }
-        })
-    .then(response => response.json())
-    .then(data => data.items.forEach(function(item) {buildABook(item)}))
-  }
-};
-
-function wishListItems() {
-  fetch('https://localhost3000', {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => response.json())
-  .then(data => data.items.forEach((item) => buildWishlistItem(item)));
-}
-
-function buildABook(volume) {
-    let book = document.createElement('div');
-    book.classList.add('book');
-    document.appendChild(book);
-
-    const para = document.createElement("p");
-    const textNode = document.createTextNode("Hello World");
-    para.appendChild(textNode);
-
-    let addButton = book.createElement('button');
-    addButton.classList.add('add');
-    addButton.id(`${volume["id"]}`);
-    book.appendChild(addButton);
-
-    let addIcon = addButton.createElement('i');
-    addIcon.classList.add('material-icons');
-    addIcon.classList.add('addBtn');
-    addButton.appendChild(addIcon.createTextNode("add_circle_outline"));
-
-    let title = book.createElement('h3');
-    title.id(`title-${volume["id"]}`);
-    book.appendChild(title.createTextNode(`${volume["volumeInfo"]["title"]}`));
-
-    let author = book.createElement('p');
-    let authorSpan = author.createElement('span');
-    authorSpan.classList.add('info');
-    authorSpan.createTextNode('Author');
-    let authorIdSpan = author.createElement('span');
-    authorIdSpan.id(`aut-${volume["id"]}`);
-    authorIdSpan.createTextNode(`${volume["volumeInfo"]["authors"]}`);
-    author.append(authorSpan);
-    author.append(authorIdSpan);
-    book.appendChild(author);
-
-    let publisher = book.createElement('p');
-    let publisherSpan = publisher.createElement('span');
-    publisherSpan.classList.add('info');
-    publisherSpan.createTextNode('Publisher');
-    let publisherIdSpan = publisher.createElement('span');
-    publisherIdSpan.id(`pub-${volume["id"]}`);
-    publisherIdSpan.createTextNode(`${volume["volumeInfo"]["publisher"]}`);
-    publisher.appendChild(publisherSpan);
-    publisher.appendChild(publisherIdSpan);
-    book.appendChild(publisher);
-
-    let datePublished = book.createElement('p');
-    let datePublishedSpan = datePublished.createElement('span');
-    datePublishedSpan.classList.add('info');
-    datePublishedSpan.createTextNode('Date Published');
-    let datePublishedIdSpan = datePublished.createElement('span');
-    datePublishedIdSpan.id(`dat-${volume["id"]}`);
-    datePublishedIdSpan.createTextNode(`${volume["volumeInfo"]["publisher"]}`);
-    datePublished.appendChild(datePublishedSpan);
-    datePublished.appendChild(datePublishedIdSpan);
-    book.appendChild(datePublished);
-
-    let description = book.createElement('p');
-    description.classList.add('description');
-    book.appendChild(description.createTextNode(`${volume["volumeInfo"]["description"]}`));
 
 }
 
@@ -194,14 +176,14 @@ function buildWishlistItem(item) {
   let bookInfo = document.createElement('div');
   bookInfo.classList.add('book-info');
   let titleBook = document.createElement('h3');
-  titleBook.createTextNode(item.title); //need to add a reference variable
+  titleBook.appendChild(document.createTextNode(item.title)); 
   let authorBook = document.createElement('p');
-  authorBook.createTextNode(item.author); //need to add a reference variable
+  authorBook.appendChild(document.createTextNode(item.author)); 
   let removeSaved = document.createElement('button');
   removeSaved.classList.add('remove-saved');
   let exitIcon = document.createElement('i');
   exitIcon.classList.add('material-icons');
-  exitIcon.createTextNode('&#xe14c;');
+  exitIcon.appendChild(document.createTextNode('&#xe14c;'));
 
   bookInfo.append(titleBook);
   bookInfo.append(authorBook);
@@ -211,7 +193,10 @@ function buildWishlistItem(item) {
   itemDiv.append(savedBook);
 }
 
-  
+function removeWishListItem(item) {
+  let savedBook = document.querySelector(`wish-${item["id"]}`);
+  savedBook.remove();
+}
 
       
 
