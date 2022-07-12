@@ -48,7 +48,7 @@ body {
 
 #query{
     height: 40px;
-    width: 300px;
+    width: 33%;
     border-radius: 20px;
     border: 1px solid #dddddd;
     padding: 2px;
@@ -169,30 +169,39 @@ body {
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 900px) {
   .book {
-      width: 100%;
+      width: 95%;
       margin: 20px 0;
   }
 
   #wishlist-pop-up {
     width: 85%;
-    margin: 100px 0 auto 0;
-    justify-content: center; /*center list */
+    margin: 200px 0 auto 0;
+    justify-content: center; 
+    text-align: center;
   }
 
   #navBar {
-
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 80px;
   }
-
   #logo {
-
+    flex: 100%;
+    
   }
 
   #enter-book {
+    flex: 100%;
+    margin-top: 10px;
+  }
 
+  #query {
+    width: 100%;
   }
 
   #wishlist {
-
+    justify-content: center;
+    margin-top: 10px;
   }
 }
 
@@ -200,8 +209,8 @@ body {
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1500px) {
   .book {
-      width: 15%;
-      margin: 15px 0;
+      width: 25%;
+      margin: 15px 5px;
   }
 
 }
