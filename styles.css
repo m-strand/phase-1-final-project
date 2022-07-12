@@ -57,7 +57,6 @@ body {
 
 #searchBtn {
   float: left;
-  display: inline-block;
   margin-right: 20px;
 }
 
@@ -83,44 +82,18 @@ body {
   margin-right: 20px;
 }
 
-#sortbyDiv {
-  position: relative;
-  display: inline-block;
-  margin: 20px;
-}
-
-#sortby {
-  display: block;
-  position: absolute;
-  background-color: white;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  border-radius: 5px;
-}
-
-#sortby option {
-  color: black;
-  padding: 10px 10px;
-  text-decoration: none;
-  display: block;
-}
-
-#sortby option:hover {
-  background-color: #FFAD60;
-}
-
 .search-section {
   margin-top: 200px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .book {
   background: white;
   flex-basis: 1;
-  width: 15%;
-  margin: 3.3%;
+  width: 21%;
+  margin: 15px;
   border: 1px solid black;
   border-radius: 15px;
   padding: 40px;
@@ -142,11 +115,11 @@ body {
   background: white;
 }
 
-.book-hover {
+.book:hover {
   border: 1px solid #9D84B7;
 }
 
-.button-hover {
+.btn:hover {
   color: #FFEEAD;
 }
 
@@ -191,3 +164,44 @@ body {
   
 }
 
+/*Responsivity section */
+
+/* Medium devices (landscape tablets, 768px and down) */
+@media only screen and (max-width: 900px) {
+  .book {
+      width: 100%;
+      margin: 20px 0;
+  }
+
+  #wishlist-pop-up {
+    width: 85%;
+    margin: 100px 0 auto 0;
+    justify-content: center; /*center list */
+  }
+
+  #navBar {
+
+  }
+
+  #logo {
+
+  }
+
+  #enter-book {
+
+  }
+
+  #wishlist {
+
+  }
+}
+
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1500px) {
+  .book {
+      width: 15%;
+      margin: 15px 0;
+  }
+
+}

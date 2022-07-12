@@ -1,40 +1,8 @@
-const books = document.querySelectorAll(".book");
 
-books.forEach((bookCard) => {
-  bookCard.addEventListener('mouseover', () => {
-    bookCard.classList.add("book-hover");
-  });
-});
-
-books.forEach((book) => {
-  book.addEventListener('mouseleave', () => {
-    book.classList.remove("book-hover");
-  });
-});
- 
-
-const buttons = document.querySelectorAll('.btn');
-
-buttons.forEach((btn) => {
-  btn.addEventListener('mouseover', () => {
-    btn.classList.add("button-hover");
-  });
-});
-
- buttons.forEach((button) => {
-   button.addEventListener('mouseleave', () => {
-     button.classList.remove("button-hover");
-   });
- });
 
 document.querySelector("#wishlist").addEventListener('click', () => {
     const popup = document.getElementById("wishlist-pop-up");
-      if (popup.style.visibility === "hidden") {
-          popup.style.visibility = "visible";
-      } 
-      else {
-          popup.style.visibility = "hidden";
-      }
+      popup.style.visibility="visible";
 });
 
 document.querySelector("#exit-list").addEventListener('click', () => {
@@ -173,6 +141,7 @@ function buildWishlistItem(item) {
   let itemDiv = document.querySelector('#wishlist-pop-up');
   let savedBook = document.createElement('div');
   savedBook.classList.add('saved-book');
+  savedBook.id = item.wishId;
   let bookInfo = document.createElement('div');
   bookInfo.classList.add('book-info');
   let titleBook = document.createElement('h3');
@@ -194,7 +163,7 @@ function buildWishlistItem(item) {
 }
 
 function removeWishListItem(item) {
-  let savedBook = document.querySelector(`wish-${item["id"]}`);
+  let savedBook = document.querySelector(`wish-${item.wishId}`);
   savedBook.remove();
 }
 
