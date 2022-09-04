@@ -1,5 +1,3 @@
-
-
 document.querySelector("#wishlist").addEventListener('click', () => {
     const popup = document.getElementById("wishlist-pop-up");
       popup.style.visibility="visible";
@@ -41,17 +39,17 @@ function buildABook(volume) {
   let searchResults = document.querySelector('.search-section');
   let book = document.createElement('div');
   book.classList.add('book');
-  book.id = `wish-${volume["id"]}`;
   searchResults.appendChild(book);
 
   let addButton = document.createElement('button');
   addButton.classList.add('add');
-  addButton.id = `${volume["id"]}`;
+  addButton.id = `${volume["id"]}`; 
   book.appendChild(addButton);
 
   let addIcon = document.createElement('i');
   addIcon.classList.add('material-icons');
   addIcon.classList.add('addBtn');
+  addIcon.id=`btn-${volume["id"]}`;
   addIcon.appendChild(document.createTextNode("add_circle_outline"));
   addButton.appendChild(addIcon);
 
@@ -99,38 +97,18 @@ function buildABook(volume) {
 
   
   const addBtn = document.querySelectorAll('.addBtn');
+
   addBtn.forEach((add) => {
       add.addEventListener('click', () => {
-          let jsonObj = {}
           let title = document.querySelector(`#title-${volume["id"]}`);
           let author = document.querySelector(`#aut-${volume["id"]}`);
-          let wishId = document.querySelector(`#wish-${volume["id"]}`);
-          jsonObj = {
-            'title': title.innerHTML,
-            'author': author.innerHTML,
-            'wishId': wishId.id
-          }
+          let wishId = volume["id"];
+          let book = [title, author, wishId];
       if (add.innerHTML == 'add_circle_outline') {
           add.innerHTML = 'done';
-          buildWishlistItem(jsonObj);
-          /*fetch("https://localhost:3000", {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json'
-            }, 
-              body: JSON.stringify(jsonObj)
-            })
-            .then(res => {console.log("Request complete! response:", res);}); */
+          buildWishlistItem(book);
         }
-      else {
-          add.innerHTML = 'add_circle_outline';
-          /*fetch("https://localhost:3000/" + jsonObj, { 
-            method: "DELETE",
-            headers: {
-              'Content-type': 'application/json'}
-          }); */
-          removeWishListItem(jsonObj);
-      }
+      
   });
 });
 
@@ -141,18 +119,18 @@ function buildWishlistItem(item) {
   let itemDiv = document.querySelector('#wishlist-pop-up');
   let savedBook = document.createElement('div');
   savedBook.classList.add('saved-book');
-  savedBook.id = item.wishId;
+  savedBook.id = item[2];
   let bookInfo = document.createElement('div');
   bookInfo.classList.add('book-info');
   let titleBook = document.createElement('h3');
-  titleBook.appendChild(document.createTextNode(item.title)); 
+  titleBook.appendChild(document.createTextNode(item[0].innerHTML)); 
   let authorBook = document.createElement('p');
-  authorBook.appendChild(document.createTextNode(item.author)); 
+  authorBook.appendChild(document.createTextNode(item[1].innerHTML)); 
   let removeSaved = document.createElement('button');
   removeSaved.classList.add('remove-saved');
   let exitIcon = document.createElement('i');
   exitIcon.classList.add('material-icons');
-  exitIcon.appendChild(document.createTextNode('&#xe14c;'));
+  exitIcon.appendChild(document.createTextNode('close'));
 
   bookInfo.append(titleBook);
   bookInfo.append(authorBook);
@@ -160,11 +138,20 @@ function buildWishlistItem(item) {
   savedBook.appendChild(removeSaved);
   savedBook.appendChild(exitIcon);
   itemDiv.append(savedBook);
+
+  
+  exitIcon.addEventListener("click", () => {
+      removeWishListItem(savedBook);
+      let addIcon = document.querySelector(`#btn-${item[2]}`);
+      addIcon.innerHTML = "add_circle_outline";
+    
+  });
+ 
+
 }
 
 function removeWishListItem(item) {
-  let savedBook = document.querySelector(`wish-${item.wishId}`);
-  savedBook.remove();
+  item.remove();
 }
 
       
